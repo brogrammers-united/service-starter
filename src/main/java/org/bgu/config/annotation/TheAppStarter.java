@@ -15,4 +15,5 @@ import org.springframework.context.annotation.Import;
 @Import(TheAppAutoConfiguration.class)
 public @interface TheAppStarter {
 
+	boolean autoConfigure() default true;
 }

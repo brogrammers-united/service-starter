@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -17,6 +18,7 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
 @Configuration
+@EnableMongoRepositories(basePackages="org.bgu.repository")
 public class MongoConfig extends AbstractMongoConfiguration {
 	
 	@Autowired
@@ -41,7 +43,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 	public MongoDbFactory mongoDbFactory() {
 		return new SimpleMongoDbFactory(mongoClient(), getDatabaseName());
 	}
-	
+
 	@Bean
 	@Override
 	public MongoTemplate mongoTemplate() throws Exception {
@@ -57,4 +59,5 @@ public class MongoConfig extends AbstractMongoConfiguration {
 	public Collection<String> getMappingBasePackages() {
 		return mongoProps.getMappingBasePackages();
 	}
+	
 }
