@@ -1,4 +1,4 @@
-package org.bgu.service.oauth.interfaces;
+package org.bgu.oauth.service.interfaces;
 
 import org.bgu.exception.EmailNotFoundException;
 import org.bgu.model.interfaces.BguUserDetails;

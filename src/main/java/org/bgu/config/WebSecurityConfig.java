@@ -1,8 +1,10 @@
 package org.bgu.config;
 
+import org.bgu.oauth.service.interfaces.BguUserDetailsService;
+import org.bgu.security.BguPreAuthenticationProvider;
 import org.bgu.security.HttpCookieOAuth2AuthorizationRequestRepository;
-import org.bgu.service.oauth.interfaces.BguUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +27,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private HttpCookieOAuth2AuthorizationRequestRepository requestRepo;
 	
+	@Autowired
+	@Qualifier("bguPreAuthProvider")
+	private BguPreAuthenticationProvider preAuthAuthenticationProvider;
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -38,7 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
+		auth
+			.authenticationProvider(preAuthAuthenticationProvider)
+			.userDetailsService(userDetailsService);
 	}
 	
 	@Override

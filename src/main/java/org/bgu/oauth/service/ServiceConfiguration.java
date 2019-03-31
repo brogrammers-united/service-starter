@@ -1,4 +1,4 @@
-package org.bgu.service.oauth;
+package org.bgu.oauth.service;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

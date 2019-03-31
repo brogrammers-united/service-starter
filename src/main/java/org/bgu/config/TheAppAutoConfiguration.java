@@ -1,8 +1,8 @@
 package org.bgu.config;
 
 import org.bgu.config.oauth.OAuth2Beans;
+import org.bgu.oauth.service.ServiceConfiguration;
 import org.bgu.repository.RepositoryConfiguration;
-import org.bgu.service.oauth.ServiceConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 

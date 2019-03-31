@@ -9,7 +9,7 @@ public class BguClientRegistrationFactory {
 	private BguClientRegistrationFactory() {}
 	
 	/**
-	 * 	Helper method to convert {@link BguClientRegistration} into an instance of {@link ClientRegistration}
+	 * 	Helper method to convert {@link BguClientRegistration} into an instance of {@link org.springframework.security.oauth2.client.registration.ClientRegistraiton}
 	 */
 	public static ClientRegistration getInstance(final BguClientRegistration appClient) {
 		return ClientRegistration.withRegistrationId(appClient.getRegistrationId())

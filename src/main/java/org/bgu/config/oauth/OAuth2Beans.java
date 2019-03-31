@@ -2,12 +2,12 @@ package org.bgu.config.oauth;
 
 import java.util.Arrays;
 
+import org.bgu.oauth.service.BguClientDetailsService;
+import org.bgu.oauth.service.BguTokenEnhancer;
 import org.bgu.security.ApplicationExceptionHandler;
 import org.bgu.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.bgu.service.KeyStoreService;
 import org.bgu.service.KeyStoreServiceImpl;
-import org.bgu.service.oauth.BguClientDetailsService;
-import org.bgu.service.oauth.BguTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +25,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @Import({ HttpCookieOAuth2AuthorizationRequestRepository.class, ApplicationExceptionHandler.class, KeyStoreServiceImpl.class })
 public class OAuth2Beans {
+	
+	public static final String TOKEN_KEY = "Authorization";
+	public static final String BEARER = "Bearer ";
 	
 	@Autowired
 	private BguClientDetailsService clientDetailsService;

@@ -1,9 +1,9 @@
-package org.bgu.service.oauth;
+package org.bgu.oauth.service;
 
 import org.bgu.exception.EmailNotFoundException;
 import org.bgu.model.interfaces.BguUserDetails;
+import org.bgu.oauth.service.interfaces.BguUserDetailsService;
 import org.bgu.repository.ApplicationUserRepository;
-import org.bgu.service.oauth.interfaces.BguUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

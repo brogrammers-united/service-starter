@@ -1,184 +1,149 @@
 package org.bgu.model.oauth;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bgu.model.BguRegistrationProvider;
-import org.bgu.model.RegistrationProvider;
+import org.bgu.model.BguOAuth2UserInfo;
+import org.bgu.model.GithubBguOAuth2UserInfo;
 import org.bgu.model.UserAuthority;
 import org.bgu.model.interfaces.BguUserDetails;
-import org.bgu.model.interfaces.Verifiable;
+import org.bgu.model.oauth.helper.LoginPreference;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Document(collection = "bgu_user")
-public class BguUser implements OAuth2User, Verifiable, BguUserDetails {
+public class BguUser implements BguUserDetails, OAuth2User {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3L;
 
 	@Id
+	@JsonIgnore
 	private ObjectId id;
 
 	@Indexed(unique = true)
-	private String username;
-
-	@JsonIgnore
-	private String password;
+	private final String username;
 
 	@Indexed(unique = true)
-	private String email;
+	private final String email;
 
-	private String authorities;
-
-	private String name;
-
-	private String imageUrl;
+	private final String authorities;
 
 	@JsonIgnore
-	private boolean enabled;
+	private final boolean enabled;
 
 	@JsonIgnore
-	private boolean accountNonLocked;
+	private final boolean accountNonLocked;
 
 	@JsonIgnore
-	private boolean accountNonExpired;
+	private final boolean accountNonExpired;
 
 	@JsonIgnore
-	private boolean credentialsNonExpired;
+	private final boolean credentialsNonExpired;
 
-	private Map<String, Object> attributes;
+	private final String githubOAuthToken;
 
-	private boolean mfaEnabled;
-
-	@JsonIgnore
-	private final BguRegistrationProvider registrationProvider;
-
+	private final Map<String, Object> attributes;
+	
 	@PersistenceConstructor
-	public BguUser(String username, String password, String authorities, String name, String email,
-			boolean enabled, boolean accountNonLocked, boolean accountNonExpired, boolean credentialsNonExpired,
-			Map<String, Object> attributes, boolean mfaEnabled, BguRegistrationProvider registrationProvider) {
+	public BguUser(String username, String email, String authorities, boolean enabled, boolean accountNonLocked,
+			boolean accountNonExpired, boolean credentialsNonExpired, Map<String, Object> attributes,
+			String githubOAuthToken) {
 		super();
 		this.username = username;
-		this.password = password;
 		this.authorities = authorities;
-		this.name = name;
 		this.email = email;
 		this.enabled = enabled;
 		this.accountNonLocked = accountNonLocked;
 		this.accountNonExpired = accountNonExpired;
 		this.credentialsNonExpired = credentialsNonExpired;
 		this.attributes = attributes;
-		this.mfaEnabled = mfaEnabled;
-		this.registrationProvider = registrationProvider;
+		this.githubOAuthToken = githubOAuthToken;
 	}
 
 	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
+		return (String) attributes.getOrDefault("login", username);
 	}
 
 	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+		return "";
 	}
 
 	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
+		return (String) attributes.getOrDefault("email", email);
 	}
 
 	public Set<UserAuthority> getAuthorities() {
 		return Arrays.stream(authorities.split(",")).map(UserAuthority::new).collect(Collectors.toSet());
 	}
 
-	public void setAuthorities(Collection<UserAuthority> authorities) {
-		this.authorities = authorities.stream().map(UserAuthority::getAuthority).collect(Collectors.joining(","));
-	}
-
 	public boolean isEnabled() {
 		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
 	}
 
 	public boolean isAccountNonLocked() {
 		return accountNonLocked;
 	}
 
-	public void setAccountNonLocked(boolean accountNonLocked) {
-		this.accountNonLocked = accountNonLocked;
-	}
-
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
-	}
-
-	public void setAccountNonExpired(boolean accountNonExpired) {
-		this.accountNonExpired = accountNonExpired;
 	}
 
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}
 
-	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-		this.credentialsNonExpired = credentialsNonExpired;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getName() {
-		return name;
+		return (String) attributes.getOrDefault("name", "Not yet implemented");
+	}
+
+	public String getImageUrl() {
+		return (String) attributes.getOrDefault("avatar_url", null);
+	}
+
+	public boolean isMfaEnabled() {
+		return Boolean.valueOf((String) attributes.getOrDefault("two_factor_authentication", "false"));
+	}
+
+	public int getUserId() {
+		return Integer.parseInt((String) attributes.getOrDefault("id", 0));
+	}
+
+	public String getGithubOAuthToken() {
+		return githubOAuthToken;
 	}
 
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
-
-	public void setAttributes(Map<String, Object> attributes) {
-		this.attributes = attributes;
-	}
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public boolean isMfaEnabled() {
-		return mfaEnabled;
-	}
-
-	public void setMfaEnabled(boolean mfaEnabled) {
-		this.mfaEnabled = mfaEnabled;
-	}
 	
-	public RegistrationProvider getRegistrationProvider() {
-		return registrationProvider;
+	@Override
+	public LoginPreference getLoginPreference() {
+		if (StringUtils.hasText(getUsername()) && StringUtils.hasText(getEmail()))
+			return LoginPreference.ANY;
+		else if (!StringUtils.hasText(getUsername()) && StringUtils.hasText(getEmail()))
+			return LoginPreference.EMAIL;
+		else if (StringUtils.hasText(getUsername()) && !StringUtils.hasText(getEmail()))
+			return LoginPreference.USERNAME;
+		return LoginPreference.NONE;
+	}
+
+	public static BguUser generateUserFromOAuthInfo(String githubOAuthToken, BguUserDetails details, BguOAuth2UserInfo userInfo) {
+		GithubBguOAuth2UserInfo info = (GithubBguOAuth2UserInfo) userInfo;
+		BguUser user = new BguUser(details.getUsername(), details.getEmail(),
+				details.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")),
+				details.isEnabled(), details.isAccountNonLocked(), details.isAccountNonExpired(),
+				details.isCredentialsNonExpired(), info.getAttributes(), githubOAuthToken);
+		return user;
 	}
 
 	@Override
@@ -192,10 +157,8 @@ public class BguUser implements OAuth2User, Verifiable, BguUserDetails {
 		result = prime * result + (credentialsNonExpired ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
-		result = prime * result + ((imageUrl == null) ? 0 : imageUrl.hashCode());
-		result = prime * result + (mfaEnabled ? 1231 : 1237);
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((githubOAuthToken == null) ? 0 : githubOAuthToken.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -232,22 +195,15 @@ public class BguUser implements OAuth2User, Verifiable, BguUserDetails {
 			return false;
 		if (enabled != other.enabled)
 			return false;
-		if (imageUrl == null) {
-			if (other.imageUrl != null)
+		if (githubOAuthToken == null) {
+			if (other.githubOAuthToken != null)
 				return false;
-		} else if (!imageUrl.equals(other.imageUrl))
+		} else if (!githubOAuthToken.equals(other.githubOAuthToken))
 			return false;
-		if (mfaEnabled != other.mfaEnabled)
-			return false;
-		if (name == null) {
-			if (other.name != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
+		} else if (!id.equals(other.id))
 			return false;
 		if (username == null) {
 			if (other.username != null)
@@ -260,16 +216,8 @@ public class BguUser implements OAuth2User, Verifiable, BguUserDetails {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ApplicationUser [username=");
-		builder.append(username);
-		builder.append(", email=");
-		builder.append(email);
-		builder.append(", authorities=");
+		builder.append("BguUser [authorities=");
 		builder.append(authorities);
-		builder.append(", name=");
-		builder.append(name);
-		builder.append(", imageUrl=");
-		builder.append(imageUrl);
 		builder.append(", enabled=");
 		builder.append(enabled);
 		builder.append(", accountNonLocked=");
@@ -278,10 +226,20 @@ public class BguUser implements OAuth2User, Verifiable, BguUserDetails {
 		builder.append(accountNonExpired);
 		builder.append(", credentialsNonExpired=");
 		builder.append(credentialsNonExpired);
-		builder.append(", attributes=");
-		builder.append(attributes);
-		builder.append(", mfaEnabled=");
-		builder.append(mfaEnabled);
+		builder.append(", githubOAuthToken=");
+		builder.append(githubOAuthToken);
+		builder.append(", getUsername()=");
+		builder.append(getUsername());
+		builder.append(", getEmail()=");
+		builder.append(getEmail());
+		builder.append(", getName()=");
+		builder.append(getName());
+		builder.append(", getImageUrl()=");
+		builder.append(getImageUrl());
+		builder.append(", isMfaEnabled()=");
+		builder.append(isMfaEnabled());
+		builder.append(", getUserId()=");
+		builder.append(getUserId());
 		builder.append("]");
 		return builder.toString();
 	}
