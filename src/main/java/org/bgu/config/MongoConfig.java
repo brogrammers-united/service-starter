@@ -6,11 +6,11 @@ import org.bgu.config.properties.MongoProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -18,13 +18,12 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
 @Configuration
-@EnableMongoRepositories(basePackages="org.bgu.repository")
 public class MongoConfig extends AbstractMongoConfiguration {
 	
 	@Autowired
 	private MongoProperties mongoProps;
 	
-	@Bean
+	@Bean("oauthClient")
 	@Override
 	public MongoClient mongoClient() {
 		MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
@@ -38,13 +37,14 @@ public class MongoConfig extends AbstractMongoConfiguration {
 		return new MongoClient(new ServerAddress(mongoProps.getUrl(), mongoProps.getPort()), MongoCredential.createCredential(mongoProps.getUsername(), mongoProps.getDatabase(), mongoProps.getPassword()), builder.build());
 	}
 	
-	@Bean
+	@Bean("oauthMongoDbFactory")
 	@Override
 	public MongoDbFactory mongoDbFactory() {
 		return new SimpleMongoDbFactory(mongoClient(), getDatabaseName());
 	}
 
-	@Bean
+	@Primary
+	@Bean("oauthMongoTemplate")
 	@Override
 	public MongoTemplate mongoTemplate() throws Exception {
 		return new MongoTemplate(mongoDbFactory());

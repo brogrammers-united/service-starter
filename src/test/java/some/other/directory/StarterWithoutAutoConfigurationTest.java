@@ -11,6 +11,9 @@ import org.bgu.repository.ApplicationUserRepository;
 import org.bgu.repository.BguClientDetailsRepository;
 import org.bgu.repository.RefreshTokenRepository;
 import org.bgu.security.ApplicationExceptionHandler;
+import org.bgu.security.BguPreAuthenticationProvider;
+import org.bgu.security.BguTokenAuthenticationFilter;
+import org.bgu.security.PreAuthenticatedUserDetailsService;
 import org.bgu.service.KeyStoreServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,6 +102,21 @@ public class StarterWithoutAutoConfigurationTest {
 	@Test(expected=NoSuchBeanDefinitionException.class)
 	public void applicationExceptionHandler_ShouldNotBeFoundIn_ApplicationContext() {
 		context.getBean(ApplicationExceptionHandler.class);
+	}
+	
+	@Test(expected=NoSuchBeanDefinitionException.class)
+	public void bguPreAuthenticationProvider_ShouldNotBeFoundIn_ApplicationContext() {
+		context.getBean(BguPreAuthenticationProvider.class);
+	}
+	
+	@Test(expected=NoSuchBeanDefinitionException.class)
+	public void preAuthenticatedUserDetailsService_ShouldNotBeIn_ApplicationContext() {
+		context.getBean(PreAuthenticatedUserDetailsService.class);
+	}
+	
+	@Test(expected=NoSuchBeanDefinitionException.class)
+	public void bguTokenAuthenticationFilter_ShouldNotBeIn_ApplicationContext() {
+		context.getBean(BguTokenAuthenticationFilter.class);
 	}
 	
 	/*

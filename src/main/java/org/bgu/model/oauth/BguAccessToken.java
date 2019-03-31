@@ -4,6 +4,7 @@ import org.bgu.model.oauth.helper.SerializableObjectConverter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -15,16 +16,20 @@ public class BguAccessToken {
 	@Id
 	private ObjectId id;
 	
+	@Indexed(unique=true)
 	private String tokenId;
 
+	@Indexed(unique=true)
 	private String authenticationId;
 
 	private String username;
 
+	@Indexed(unique=false)
 	private String clientId;
 
 	private String authentication;
 
+	@Indexed(unique=true)
 	private String refreshToken;
 
 	private String token;

@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	@Qualifier("bguPreAuthProvider")
-	private BguPreAuthenticationProvider preAuthAuthenticationProvider;
+	private BguPreAuthenticationProvider bguPreAuthProvider;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -45,18 +45,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth
-			.authenticationProvider(preAuthAuthenticationProvider)
+			.authenticationProvider(bguPreAuthProvider)
 			.userDetailsService(userDetailsService);
 	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+			.authenticationProvider(bguPreAuthProvider)
 			.csrf()
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.and()
 			.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.NEVER)
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 			.httpBasic()
 				.disable()
