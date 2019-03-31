@@ -4,6 +4,7 @@ import org.bgu.model.oauth.helper.SerializableObjectConverter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
@@ -15,6 +16,7 @@ public class BguRefreshToken {
 	@Id
 	private ObjectId id;
 	
+	@Indexed(unique=true)
 	private String tokenId;
 
 	private String authentication;

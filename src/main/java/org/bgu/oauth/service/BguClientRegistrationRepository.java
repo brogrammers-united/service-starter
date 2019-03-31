@@ -2,7 +2,7 @@ package org.bgu.oauth.service;
 
 import org.bgu.model.oauth.BguClientRegistration;
 import org.bgu.model.oauth.helper.BguClientRegistrationFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,16 +14,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class BguClientRegistrationRepository implements ClientRegistrationRepository {
 
-	private final MongoTemplate template;
+	private final MongoTemplate oauthMongoTemplate;
 	
-	@Autowired
-	public BguClientRegistrationRepository(MongoTemplate template) {
-		this.template = template;
+	public BguClientRegistrationRepository(@Qualifier("oauthMongoTemplate") MongoTemplate oauthMongoTemplate) {
+		this.oauthMongoTemplate = oauthMongoTemplate;
 	}
 	
 	@Override
 	public ClientRegistration findByRegistrationId(String registrationId) {
-		final BguClientRegistration appClient = template.findOne(Query.query(Criteria.where("registrationId").is(registrationId)), BguClientRegistration.class, "bgu_client_registration");
+		final BguClientRegistration appClient = oauthMongoTemplate.findOne(Query.query(Criteria.where("registrationId").is(registrationId)), BguClientRegistration.class, "bgu_client_registration");
 		if (appClient == null)
 			throw new ClientRegistrationException("Failed to locate client with specified id");
 		return BguClientRegistrationFactory.getInstance(appClient);
