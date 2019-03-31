@@ -17,6 +17,9 @@ import org.bgu.repository.RefreshTokenRepository;
 import org.bgu.repository.impl.ApplicationUserRepositoryImpl;
 import org.bgu.repository.impl.BguClientDetailsRepositoryImpl;
 import org.bgu.security.ApplicationExceptionHandler;
+import org.bgu.security.BguPreAuthenticationProvider;
+import org.bgu.security.BguTokenAuthenticationFilter;
+import org.bgu.security.PreAuthenticatedUserDetailsService;
 import org.bgu.service.KeyStoreService;
 import org.bgu.service.KeyStoreServiceImpl;
 import org.junit.Test;
@@ -122,6 +125,21 @@ public class StarterAutoConfigurationTest {
 	@Test
 	public void keyStoreService_ShouldBeInApplicationContext() {
 		assertTrue("KeyStoreService could not be found in ApplicationContext", context.getBean(KeyStoreService.class) instanceof KeyStoreServiceImpl);
+	}
+	
+	@Test
+	public void preAuthenticationUserDetailsService_ShouldBeInApplicationContext() {
+		assertNotNull("PreAuthenticatedUserDetailsService could not be found in ApplicationContext", context.getBean(PreAuthenticatedUserDetailsService.class));
+	}
+	
+	@Test
+	public void bguPreAuthenticationProvider_ShouldBeInApplicationContext() {
+		assertTrue("BguPreAuthenticationProvider could not be found in ApplicationContext", context.getBean("bguPreAuthProvider") instanceof BguPreAuthenticationProvider);
+	}
+	
+	@Test
+	public void bguTokenAuthenticationFilter_ShouldBeInApplicationContext() {
+		assertNotNull("BguTokenAuthenticationFilter could not be found in ApplicationContext", context.getBean(BguTokenAuthenticationFilter.class));
 	}
 	
 	/*

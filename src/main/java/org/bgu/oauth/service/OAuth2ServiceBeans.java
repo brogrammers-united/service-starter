@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({ BguClientDetailsService.class, BguClientRegistrationRepository.class, BguTokenStore.class, BguUserDetailsServiceImpl.class})
-public class ServiceConfiguration {
+public class OAuth2ServiceBeans {
 
 }

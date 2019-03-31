@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({ ApplicationUserRepositoryImpl.class, BguClientDetailsRepositoryImpl.class} )
-public class RepositoryConfiguration {
+public class RepositoryBeans {
 
 }
