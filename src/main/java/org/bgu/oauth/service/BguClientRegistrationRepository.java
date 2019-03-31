@@ -1,4 +1,4 @@
-package org.bgu.service.oauth;
+package org.bgu.oauth.service;
 
 import org.bgu.model.oauth.BguClientRegistration;
 import org.bgu.model.oauth.helper.BguClientRegistrationFactory;

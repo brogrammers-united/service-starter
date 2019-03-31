@@ -1,4 +1,4 @@
-package org.bgu.service.oauth;
+package org.bgu.oauth.service;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;

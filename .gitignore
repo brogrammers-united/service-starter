@@ -28,3 +28,5 @@ HELP.md
 *resources*
 *mvn*
 .attach*
+
+dependency-reduced-pom.xml
