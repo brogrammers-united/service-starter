@@ -3,8 +3,8 @@ package some.other.directory;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.bgu.config.properties.ApplicationMongoProperties;
 import org.bgu.config.properties.KeyStoreProperties;
-import org.bgu.config.properties.MailProperties;
 import org.bgu.config.properties.MongoProperties;
 import org.bgu.oauth.service.BguClientDetailsService;
 import org.bgu.oauth.service.BguClientRegistrationRepository;
@@ -95,8 +95,8 @@ public class StarterAutoConfigurationTest {
 	}
 	
 	@Test
-	public void mailPropertiesBean_ShouldBeInApplicationContext() {
-		assertNotNull("MailProperties could not be found in ApplicationContext", context.getBean(MailProperties.class));
+	public void applicationMongoPropertiesBean_ShouldBeInApplicationContext() {
+		assertNotNull("MailProperties could not be found in ApplicationContext", context.getBean(ApplicationMongoProperties.class));
 	}
 	
 	/*

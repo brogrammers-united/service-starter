@@ -1,26 +1,17 @@
 package org.bgu.config.properties;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+@Component
 @ConfigurationProperties(prefix = "keystore")
-@PropertySource(value = { "classpath:application.properties", "classpath:application.yml",
-		"classpath:keystore.properties", "classpath:keystore.yml" }, ignoreResourceNotFound = false)
 public class KeyStoreProperties {
-
-	private final ApplicationContext context;
 
 	private String type;
 	private String fileName;
 	private String alias;
 	private char[] password;
-
-	public KeyStoreProperties(ApplicationContext context) {
-		this.context = context;
-	}
 
 	public String getType() {
 		return type;
@@ -50,19 +41,12 @@ public class KeyStoreProperties {
 		return password;
 	}
 
-	public void setPassword(char[] password) {
-		if (password.length == 0) {
+	public void setPassword(String password) {
+		if (!StringUtils.hasText(password)) {
 			this.password = null;
 			return;
 		}
-		this.password = password;
+		this.password = password.toCharArray();
 	}
 
-	@PostConstruct
-	public void initProperties() {
-		this.setAlias(context.getEnvironment().getProperty("keystore.alias"));
-		this.setFileName(context.getEnvironment().getProperty("keystore.file-name"));
-		this.setType(context.getEnvironment().getProperty("keystore.type"));
-		this.setPassword(context.getEnvironment().getProperty("keystore.password").toCharArray());
-	}
 }
