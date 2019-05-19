@@ -25,14 +25,14 @@ public class KeyStoreServiceImpl implements KeyStoreService {
 	private final KeyPair keyPair;
 	
 	@Autowired
-	public KeyStoreServiceImpl(KeyStoreProperties keyStoreProps) {
+	public KeyStoreServiceImpl(KeyStoreProperties keyStoreProperties) {
 		try {
-			KeyStore keyStore = KeyStore.getInstance(keyStoreProps.getType());
-			keyStore.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(keyStoreProps.getFileName()), keyStoreProps.getPassword());
-			Key key = keyStore.getKey(keyStoreProps.getAlias(), keyStoreProps.getPassword());
+			KeyStore keyStore = KeyStore.getInstance(keyStoreProperties.getType());
+			keyStore.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(keyStoreProperties.getFileName()), keyStoreProperties.getPassword());
+			Key key = keyStore.getKey(keyStoreProperties.getAlias(), keyStoreProperties.getPassword());
 			if (key instanceof PrivateKey) {
 				// Get the certificate
-				Certificate cert = keyStore.getCertificate(keyStoreProps.getAlias());
+				Certificate cert = keyStore.getCertificate(keyStoreProperties.getAlias());
 				
 				// Get Public Key
 				PublicKey pubKey = cert.getPublicKey();

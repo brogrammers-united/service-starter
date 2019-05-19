@@ -1,7 +1,7 @@
 package some.other.directory;
 
+import org.bgu.config.properties.ApplicationMongoProperties;
 import org.bgu.config.properties.KeyStoreProperties;
-import org.bgu.config.properties.MailProperties;
 import org.bgu.config.properties.MongoProperties;
 import org.bgu.oauth.service.BguClientDetailsService;
 import org.bgu.oauth.service.BguClientRegistrationRepository;
@@ -66,20 +66,20 @@ public class StarterWithoutAutoConfigurationTest {
 	 * Property Configuration Beans
 	 */
 	@Test(expected=NoSuchBeanDefinitionException.class)
-	public void keyStoreProperties_ShouldNotBeFoundIn_ApplicationContext() {
-		context.getBean(KeyStoreProperties.class);
-	}
-	
-	@Test(expected=NoSuchBeanDefinitionException.class)
 	public void mongoProperties_ShouldNotBeFoundIn_ApplicationContext() {
 		context.getBean(MongoProperties.class);
 	}
-	
+
 	@Test(expected=NoSuchBeanDefinitionException.class)
-	public void mailProperties_ShouldNotBeFoundIn_ApplicationContext() {
-		context.getBean(MailProperties.class);
+	public void applicationMongoProperties_ShouldNotBeFoundIn_ApplicationContext() {
+		context.getBean(ApplicationMongoProperties.class);
 	}
-	
+
+	@Test(expected=NoSuchBeanDefinitionException.class)
+	public void keyStoreProperties_ShouldNotBeFoundIn_ApplicationContext() {
+		context.getBean(KeyStoreProperties.class);
+	}
+
 	/*
 	 * Security Services
 	 */

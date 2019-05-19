@@ -1,22 +1,16 @@
 package org.bgu.config.properties;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.util.StringUtils;
-
+@Component
 @ConfigurationProperties(prefix="mongodb")
-@PropertySource(value = { "classpath:mongodb.properties", "classpath:application.properties", "classpath:application.yml","classpath:mongodb.yml" }, ignoreResourceNotFound = false)
 public class MongoProperties {
 
-	private ApplicationContext context;
-	
 	private String url;
 	private int port;
 	private String username;
@@ -30,27 +24,6 @@ public class MongoProperties {
 	private int connectionIdleTime;
 	private int connectionLifeTime;
 
-	public MongoProperties(ApplicationContext context) {
-		this.context = context;
-	}
-	
-	@PostConstruct
-	public void initProperties() {
-		this.setUrl(context.getEnvironment().getProperty("mongodb.url", "127.0.0.1"));
-		this.setPort(Integer.valueOf(context.getEnvironment().getProperty("mongodb.port", "27017")));
-		this.setUsername(context.getEnvironment().getProperty("mongodb.username"));
-		this.setPassword(context.getEnvironment().getProperty("mongodb.password"));
-		this.setDatabase(context.getEnvironment().getProperty("mongodb.database"));
-		this.setRegisterMbeans(Boolean.valueOf(context.getEnvironment().getProperty("mongodb.register-mbeans", "true")));
-		this.setConnectionsPerHost(Integer.valueOf(context.getEnvironment().getProperty("mongodb.max-connections-per-host", "100")));
-		this.setMinConnectionsPerHost(Integer.valueOf(context.getEnvironment().getProperty("mongodb.min-connections-per-host", "0")));
-		this.setConnectionLifeTime(Integer.valueOf(context.getEnvironment().getProperty("mongodb.connection-life-time", "0")));
-		this.setConnectionIdleTime(Integer.valueOf(context.getEnvironment().getProperty("mongodb.connection-idle-time", "0")));
-		this.setConnectionTimeout(Integer.valueOf(context.getEnvironment().getProperty("mongodb.connection-timeout", "0")));
-	}
-	
-	
-	
 	public List<String> getMappingBasePackages() {
 		return Arrays.stream(mappingBasePackages.split(",")).collect(Collectors.toList());
 	}
@@ -68,12 +41,16 @@ public class MongoProperties {
 	}
 
 	public int getPort() {
+		if (port == 0)
+			return 27017;
 		return port;
 	}
 
 	public void setPort(int port) {
 		this.port = port;
 	}
+
+	public void setPort(Integer port) { this.port = port; }
 
 	public int getMinConnectionsPerHost() {
 		return minConnectionsPerHost;
@@ -105,10 +82,6 @@ public class MongoProperties {
 
 	public char[] getPassword() {
 		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = StringUtils.hasText(password) ? password.toCharArray(): null; 
 	}
 
 	public boolean isRegisterMbeans() {
@@ -150,7 +123,5 @@ public class MongoProperties {
 	public void setConnectionLifeTime(int connectionLifeTime) {
 		this.connectionLifeTime = connectionLifeTime;
 	}
-	
-	
 
 }
