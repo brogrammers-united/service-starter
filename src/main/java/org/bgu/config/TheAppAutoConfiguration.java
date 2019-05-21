@@ -8,8 +8,9 @@ import org.bgu.security.SecurityBeans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+
 @Configuration
-@Import(value = { ResourceServerConfiguration.class, MongoConfig.class, PropertiesConfiguration.class, WebConfig.class, WebSecurityConfig.class, MethodSecurityConfig.class,
+@Import(value = { ResourceServerConfiguration.class, MongoConfig.class, ApplicationMongoConfig.class, PropertiesConfiguration.class, WebConfig.class, WebSecurityConfig.class, MethodSecurityConfig.class,
 		OAuth2Beans.class, OAuth2ServiceBeans.class, RepositoryBeans.class, SecurityBeans.class })
 public class TheAppAutoConfiguration {
 

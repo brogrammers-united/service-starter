@@ -1,5 +1,6 @@
 package org.bgu.config;
 
+import org.bgu.config.annotation.RequiresSecurityInclusion;
 import org.bgu.oauth.service.interfaces.BguUserDetailsService;
 import org.bgu.security.BguPreAuthenticationProvider;
 import org.bgu.security.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+@RequiresSecurityInclusion
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {

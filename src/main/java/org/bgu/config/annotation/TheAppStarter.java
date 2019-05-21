@@ -15,5 +15,6 @@ import org.springframework.context.annotation.Import;
 @Import(TheAppAutoConfiguration.class)
 public @interface TheAppStarter {
 
-	boolean autoConfigure() default true;
+	boolean includeSecurity() default true;
+	boolean includeMongo() default true;
 }

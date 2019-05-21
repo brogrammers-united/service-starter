@@ -1,9 +1,9 @@
 package org.bgu.security;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 @Service("bguPreAuthProvider")
 public class BguPreAuthenticationProvider extends PreAuthenticatedAuthenticationProvider {
