@@ -1,8 +1,5 @@
 package some.other.directory;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.bgu.config.properties.ApplicationMongoProperties;
 import org.bgu.config.properties.KeyStoreProperties;
 import org.bgu.config.properties.MongoProperties;
@@ -14,32 +11,24 @@ import org.bgu.repository.AccessTokenRepository;
 import org.bgu.repository.ApplicationUserRepository;
 import org.bgu.repository.BguClientDetailsRepository;
 import org.bgu.repository.RefreshTokenRepository;
-import org.bgu.repository.impl.ApplicationUserRepositoryImpl;
-import org.bgu.repository.impl.BguClientDetailsRepositoryImpl;
 import org.bgu.security.ApplicationExceptionHandler;
 import org.bgu.security.BguPreAuthenticationProvider;
 import org.bgu.security.BguTokenAuthenticationFilter;
 import org.bgu.security.PreAuthenticatedUserDetailsService;
 import org.bgu.service.KeyStoreService;
-import org.bgu.service.KeyStoreServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.test.context.junit4.SpringRunner;
+import some.other.directory.config.regular.WithAnnotationContextConfiguration;
 
-import some.other.directory.config.WithAnnotationContextConfiguration;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes=WithAnnotationContextConfiguration.class)
@@ -47,6 +36,13 @@ public class StarterAutoConfigurationTest {
 
 	@Autowired
 	private ApplicationContext context;
+
+	private ApplicationContextRunner runner;
+
+	@Before
+	public void setUpRunner() {
+		runner = new ApplicationContextRunner().withParent(context);
+	}
 	
 	/**
 	 * Purpose of these tests are to ensure that the beans associated with {@code TheAppStarter} will pull in all necessary beans
@@ -54,7 +50,8 @@ public class StarterAutoConfigurationTest {
 	
 	@Test
 	public void mongoTemplate_ShouldBeInApplicationContext() {
-		assertNotNull("MongoTemplate could not be found in ApplicationContext", context.getBean(MongoTemplate.class));
+		runner.run(context -> assertThat(context).getBean("oauthMongoTemplate").isNotNull());
+		runner.run(context -> assertThat(context).getBean("applicationMongoTemplate").isNotNull());
 	}
 	
 	
@@ -63,22 +60,30 @@ public class StarterAutoConfigurationTest {
 	 */
 	@Test
 	public void accessTokenRepository_ShouldBeInApplicationContext() {
-		assertNotNull("AccessTokenRepository could not be found in ApplicationContext", context.getBean(AccessTokenRepository.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(AccessTokenRepository.class);
+		});
 	}
 	
 	@Test
 	public void refreshTokenRepository_ShouldBeInApplicationContext() {
-		assertNotNull("RefreshTokenRepository could not be found in ApplicationContext", context.getBean(RefreshTokenRepository.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(RefreshTokenRepository.class);
+		});
 	}
 	
 	@Test
 	public void applicationUserRepository_ShouldBeInApplicationContext() {
-		assertTrue("ApplicationUserRepository could not be found in ApplicationContext", context.getBean(ApplicationUserRepository.class) instanceof ApplicationUserRepositoryImpl);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(ApplicationUserRepository.class);
+		});
 	}
 	
 	@Test
 	public void clientDetailsRepository_ShouldBeInApplicationContext() {
-		assertNotNull("BguClientDetailsRepository could not be found in ApplicationContext", context.getBean(BguClientDetailsRepository.class) instanceof BguClientDetailsRepositoryImpl);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(BguClientDetailsRepository.class);
+		});
 	}
 	
 	/*
@@ -86,17 +91,23 @@ public class StarterAutoConfigurationTest {
 	 */
 	@Test
 	public void keyStorePropertiesBean_ShouldBeInApplicationContext() {
-		assertNotNull("KeyStoreProperties could not be found in ApplicationContext", context.getBean(KeyStoreProperties.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(KeyStoreProperties.class);
+		});
 	}
 	
 	@Test
 	public void mongoPropertiesBean_ShouldBeInApplicationContext() {
-		assertNotNull("MongoProperties could not be found in ApplicationContext", context.getBean(MongoProperties.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(MongoProperties.class);
+		});
 	}
-	
+
 	@Test
 	public void applicationMongoPropertiesBean_ShouldBeInApplicationContext() {
-		assertNotNull("MailProperties could not be found in ApplicationContext", context.getBean(ApplicationMongoProperties.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(ApplicationMongoProperties.class);
+		});
 	}
 	
 	/*
@@ -104,42 +115,58 @@ public class StarterAutoConfigurationTest {
 	 */
 	@Test
 	public void authenticationManager_ShouldBeInApplicationContext() {
-		assertNotNull("AuthenticationManager could not be found in ApplicationContext", context.getBean(AuthenticationManager.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(AuthenticationManager.class);
+		});
 	}
 	
 	@Test
 	public void bguUserDetailsService_ShouldBeInApplicationContext() {
-		assertTrue("BguUserDetailsService could not be found in ApplicationContext", context.getBean(UserDetailsService.class) instanceof BguUserDetailsService);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(BguUserDetailsService.class);
+		});
 	}
 	
 	@Test
 	public void passwordEncoder_ShouldBeInApplicationContext() {
-		assertTrue("PasswordEncoder could not be found in ApplicationContext", context.getBean(PasswordEncoder.class) instanceof BCryptPasswordEncoder);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(PasswordEncoder.class);
+		});
 	}
 	
 	@Test
 	public void applicationExceptionHandler_ShouldBeInApplicationContext() {
-		assertNotNull("ApplicationExceptionHandler could not be found in ApplicationContext", context.getBean(ApplicationExceptionHandler.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(ApplicationExceptionHandler.class);
+		});
 	}
 	
 	@Test
 	public void keyStoreService_ShouldBeInApplicationContext() {
-		assertTrue("KeyStoreService could not be found in ApplicationContext", context.getBean(KeyStoreService.class) instanceof KeyStoreServiceImpl);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(KeyStoreService.class);
+		});
 	}
 	
 	@Test
 	public void preAuthenticationUserDetailsService_ShouldBeInApplicationContext() {
-		assertNotNull("PreAuthenticatedUserDetailsService could not be found in ApplicationContext", context.getBean(PreAuthenticatedUserDetailsService.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(PreAuthenticatedUserDetailsService.class);
+		});
 	}
 	
 	@Test
 	public void bguPreAuthenticationProvider_ShouldBeInApplicationContext() {
-		assertTrue("BguPreAuthenticationProvider could not be found in ApplicationContext", context.getBean("bguPreAuthProvider") instanceof BguPreAuthenticationProvider);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(BguPreAuthenticationProvider.class);
+		});
 	}
 	
 	@Test
 	public void bguTokenAuthenticationFilter_ShouldBeInApplicationContext() {
-		assertNotNull("BguTokenAuthenticationFilter could not be found in ApplicationContext", context.getBean(BguTokenAuthenticationFilter.class));
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(BguTokenAuthenticationFilter.class);
+		});
 	}
 	
 	/*
@@ -148,21 +175,22 @@ public class StarterAutoConfigurationTest {
 	
 	@Test
 	public void bguClientDetailsService_ShouldBeInApplicationContext() {
-		assertTrue("BguClientDetailsService could not be found in ApplicationContext", context.getBean(ClientDetailsService.class) instanceof BguClientDetailsService);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(BguClientDetailsService.class);
+		});
 	}
 	
 	@Test
 	public void bguTokenStore_ShouldBeInApplicationContext() {
-		assertTrue("BguTokenStore could not be found in ApplicationContext", context.getBean(TokenStore.class) instanceof BguTokenStore);
-	}
-	
-	@Test
-	public void bguTokenEnhancer_ShouldBeInApplicationContext() {
-		assertTrue("BguTokenEnhancer could not be found in ApplicationContext", context.getBean(TokenEnhancer.class) instanceof TokenEnhancerChain);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(BguTokenStore.class);
+		});
 	}
 	
 	@Test
 	public void bguClientRegistrationRepository_ShouldBeInApplicationContext() {
-		assertTrue("BguClientRegistrationRepository could not be found in ApplicationContext", context.getBean(ClientRegistrationRepository.class) instanceof BguClientRegistrationRepository);
+		runner.run(context -> {
+			assertThat(context).hasSingleBean(BguClientRegistrationRepository.class);
+		});
 	}
 }
