@@ -1,11 +1,5 @@
 package org.bgu.model.oauth;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.bgu.model.ClientAuthority;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -14,6 +8,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Document(collection = "bgu_client_details")
 public class BguClientDetails implements ClientDetails {
@@ -138,125 +135,46 @@ public class BguClientDetails implements ClientDetails {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + accessTokenValidity;
-		result = prime * result + ((additionalInformation == null) ? 0 : additionalInformation.hashCode());
-		result = prime * result + ((authorities == null) ? 0 : authorities.hashCode());
-		result = prime * result + ((authorizedGrantTypes == null) ? 0 : authorizedGrantTypes.hashCode());
-		result = prime * result + ((clientId == null) ? 0 : clientId.hashCode());
-		result = prime * result + ((clientName == null) ? 0 : clientName.hashCode());
-		result = prime * result + ((clientSecret == null) ? 0 : clientSecret.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + refreshTokenValidity;
-		result = prime * result + ((registeredRedirectUri == null) ? 0 : registeredRedirectUri.hashCode());
-		result = prime * result + ((registrationId == null) ? 0 : registrationId.hashCode());
-		result = prime * result + ((resourceIds == null) ? 0 : resourceIds.hashCode());
-		result = prime * result + ((scope == null) ? 0 : scope.hashCode());
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BguClientDetails that = (BguClientDetails) o;
+		return accessTokenValidity == that.accessTokenValidity &&
+				refreshTokenValidity == that.refreshTokenValidity &&
+				Objects.equals(id, that.id) &&
+				Objects.equals(clientId, that.clientId) &&
+				Objects.equals(registrationId, that.registrationId) &&
+				Objects.equals(clientName, that.clientName) &&
+				Objects.equals(clientSecret, that.clientSecret) &&
+				Objects.equals(resourceIds, that.resourceIds) &&
+				Objects.equals(scope, that.scope) &&
+				Objects.equals(authorizedGrantTypes, that.authorizedGrantTypes) &&
+				Objects.equals(registeredRedirectUri, that.registeredRedirectUri) &&
+				Objects.equals(authorities, that.authorities) &&
+				Objects.equals(additionalInformation, that.additionalInformation);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BguClientDetails other = (BguClientDetails) obj;
-		if (accessTokenValidity != other.accessTokenValidity)
-			return false;
-		if (additionalInformation == null) {
-			if (other.additionalInformation != null)
-				return false;
-		} else if (!additionalInformation.equals(other.additionalInformation))
-			return false;
-		if (authorities == null) {
-			if (other.authorities != null)
-				return false;
-		} else if (!authorities.equals(other.authorities))
-			return false;
-		if (authorizedGrantTypes == null) {
-			if (other.authorizedGrantTypes != null)
-				return false;
-		} else if (!authorizedGrantTypes.equals(other.authorizedGrantTypes))
-			return false;
-		if (clientId == null) {
-			if (other.clientId != null)
-				return false;
-		} else if (!clientId.equals(other.clientId))
-			return false;
-		if (clientName == null) {
-			if (other.clientName != null)
-				return false;
-		} else if (!clientName.equals(other.clientName))
-			return false;
-		if (clientSecret == null) {
-			if (other.clientSecret != null)
-				return false;
-		} else if (!clientSecret.equals(other.clientSecret))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (refreshTokenValidity != other.refreshTokenValidity)
-			return false;
-		if (registeredRedirectUri == null) {
-			if (other.registeredRedirectUri != null)
-				return false;
-		} else if (!registeredRedirectUri.equals(other.registeredRedirectUri))
-			return false;
-		if (registrationId == null) {
-			if (other.registrationId != null)
-				return false;
-		} else if (!registrationId.equals(other.registrationId))
-			return false;
-		if (resourceIds == null) {
-			if (other.resourceIds != null)
-				return false;
-		} else if (!resourceIds.equals(other.resourceIds))
-			return false;
-		if (scope == null) {
-			if (other.scope != null)
-				return false;
-		} else if (!scope.equals(other.scope))
-			return false;
-		return true;
+	public int hashCode() {
+		return Objects.hash(id, clientId, registrationId, clientName, clientSecret, resourceIds, scope, authorizedGrantTypes, registeredRedirectUri, authorities, accessTokenValidity, refreshTokenValidity, additionalInformation);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ApplicationClientDetails [id=");
-		builder.append(id);
-		builder.append(", clientId=");
-		builder.append(clientId);
-		builder.append(", registrationId=");
-		builder.append(registrationId);
-		builder.append(", clientName=");
-		builder.append(clientName);
-		builder.append(", resourceIds=");
-		builder.append(resourceIds);
-		builder.append(", scope=");
-		builder.append(scope);
-		builder.append(", authorizedGrantTypes=");
-		builder.append(authorizedGrantTypes);
-		builder.append(", registeredRedirectUri=");
-		builder.append(registeredRedirectUri);
-		builder.append(", authorities=");
-		builder.append(authorities);
-		builder.append(", accessTokenValidity=");
-		builder.append(accessTokenValidity);
-		builder.append(", refreshTokenValidity=");
-		builder.append(refreshTokenValidity);
-		builder.append(", additionalInformation=");
-		builder.append(additionalInformation);
-		builder.append("]");
-		return builder.toString();
+		return new StringJoiner(", ", BguClientDetails.class.getSimpleName() + "[", "]")
+				.add("id=" + id)
+				.add("clientId='" + clientId + "'")
+				.add("registrationId='" + registrationId + "'")
+				.add("clientName='" + clientName + "'")
+				.add("clientSecret='" + clientSecret + "'")
+				.add("resourceIds='" + resourceIds + "'")
+				.add("scope='" + scope + "'")
+				.add("authorizedGrantTypes='" + authorizedGrantTypes + "'")
+				.add("registeredRedirectUri='" + registeredRedirectUri + "'")
+				.add("authorities='" + authorities + "'")
+				.add("accessTokenValidity=" + accessTokenValidity)
+				.add("refreshTokenValidity=" + refreshTokenValidity)
+				.add("additionalInformation=" + additionalInformation)
+				.toString();
 	}
-
 }

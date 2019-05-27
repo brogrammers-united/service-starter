@@ -1,18 +1,16 @@
 package org.bgu.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 @ConfigurationProperties(prefix="mongodb")
 public class MongoProperties {
 
 	private String url;
-	private int port;
+	private int port = 27017;
 	private String username;
 	private char[] password;
 	private String database;
@@ -41,8 +39,6 @@ public class MongoProperties {
 	}
 
 	public int getPort() {
-		if (port == 0)
-			return 27017;
 		return port;
 	}
 

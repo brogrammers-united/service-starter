@@ -1,13 +1,9 @@
 package org.bgu.config.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import org.bgu.config.TheAppAutoConfiguration;
 import org.springframework.context.annotation.Import;
+
+import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -15,6 +11,5 @@ import org.springframework.context.annotation.Import;
 @Import(TheAppAutoConfiguration.class)
 public @interface TheAppStarter {
 
-	boolean includeSecurity() default true;
-	boolean includeMongo() default true;
+    boolean isGateway() default false;
 }

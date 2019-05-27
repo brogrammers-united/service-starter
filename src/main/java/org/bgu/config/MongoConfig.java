@@ -12,9 +12,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.util.Collection;
 
+@EnableMongoRepositories(basePackages = "org.bgu.repository", mongoTemplateRef = "oauthMongoTemplate")
 @Configuration
 public class MongoConfig {
 	
@@ -34,11 +36,11 @@ public class MongoConfig {
 		builder.maxConnectionIdleTime(mongoProperties.getConnectionIdleTime());
 		return new MongoClient(new ServerAddress(mongoProperties.getUrl(), mongoProperties.getPort()), MongoCredential.createCredential(mongoProperties.getUsername(), mongoProperties.getDatabase(), mongoProperties.getPassword()), builder.build());
 	}
-	
+
 	@Bean("oauthMongoDbFactory")
 	@Primary
 	public MongoDbFactory mongoDbFactory() {
-		return new SimpleMongoDbFactory(mongoClient(), getOAuthDatabaseName());
+		return new SimpleMongoDbFactory(mongoClient(), getDatabaseName());
 	}
 
 	@Primary
@@ -47,7 +49,7 @@ public class MongoConfig {
 		return new MongoTemplate(mongoDbFactory());
 	}
 
-	protected String getOAuthDatabaseName() {
+	protected String getDatabaseName() {
 		return mongoProperties.getDatabase();
 	}
 

@@ -1,17 +1,14 @@
-package org.bgu.config.condition;
+package org.bgu.config.annotation.condition;
 
 import org.bgu.config.annotation.TheAppStarter;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.ConfigurationCondition;
 import org.springframework.core.type.AnnotatedTypeMetadata;
-import org.springframework.util.StringUtils;
-
-import java.util.Map;
 
 /**
  * @author William Gentry
  */
-public class IncludeSecurityCondition implements ConfigurationCondition {
+public class IsDownstreamService implements ConfigurationCondition {
 
     @Override
     public ConfigurationPhase getConfigurationPhase() {
@@ -20,10 +17,9 @@ public class IncludeSecurityCondition implements ConfigurationCondition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        Map<String, Object> beans = context.getBeanFactory().getBeansWithAnnotation(TheAppStarter.class);
-
-        String beanName = beans.keySet().stream().filter(name -> StringUtils.hasText(name)).reduce("", (a, b) -> a += b);
-
-        return beans.get(beanName).getClass().getAnnotation(TheAppStarter.class).includeSecurity();
+        String[] names = context.getBeanFactory().getBeanNamesForAnnotation(TheAppStarter.class);
+        if (names.length > 1)
+            throw new RuntimeException("ApplicationContext found multiple @TheAppStarter classes. Select 1 class");
+        return !context.getBeanFactory().getBean(names[0]).getClass().getAnnotation(TheAppStarter.class).isGateway();
     }
 }

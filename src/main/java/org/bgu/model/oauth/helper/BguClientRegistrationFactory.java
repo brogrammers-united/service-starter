@@ -7,7 +7,7 @@ public class BguClientRegistrationFactory {
 
 	// Restrict instantiation
 	private BguClientRegistrationFactory() {}
-	
+
 	public static ClientRegistration getInstance(final BguClientRegistration appClient) {
 		return ClientRegistration.withRegistrationId(appClient.getRegistrationId())
 					.authorizationGrantType(appClient.getAuthorizationGrantType())

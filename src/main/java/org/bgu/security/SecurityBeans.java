@@ -1,12 +1,12 @@
 package org.bgu.security;
 
-import org.bgu.config.annotation.RequiresSecurityInclusion;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-@RequiresSecurityInclusion
+/**
+ * @author William Gentry
+ */
 @Configuration
-@Import({ BguPreAuthenticationProvider.class, BguTokenAuthenticationFilter.class, PreAuthenticatedUserDetailsService.class, HttpCookieOAuth2AuthorizationRequestRepository.class } )
+@Import({ HttpCookieOAuth2AuthorizationRequestRepository.class, BguPreAuthenticationProvider.class, BguTokenAuthenticationFilter.class, PreAuthenticatedUserDetailsService.class } )
 public class SecurityBeans {
-
 }
