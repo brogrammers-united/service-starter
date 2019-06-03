@@ -7,6 +7,7 @@ import org.bgu.config.WebConfig;
 import org.bgu.config.WebSecurityConfig;
 import org.bgu.config.properties.KeyStoreProperties;
 import org.bgu.config.properties.MongoProperties;
+import org.bgu.config.properties.WebClientProperties;
 import org.bgu.exception.ApplicationExceptionHandler;
 import org.bgu.oauth.service.BguClientDetailsService;
 import org.bgu.oauth.service.BguClientRegistrationRepository;
@@ -173,6 +174,13 @@ public class GatewayStarterServiceTest {
     public void mongoProperties_ShouldBeIncluded() {
         runner.run(context -> {
             assertThat(context).hasSingleBean(MongoProperties.class);
+        });
+    }
+
+    @Test
+    public void webClientProperties_ShouldBeIncluded() {
+        runner.run(context -> {
+            assertThat(context).hasSingleBean(WebClientProperties.class);
         });
     }
 

@@ -3,6 +3,7 @@ package org.bgu.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
+import org.bgu.config.properties.WebClientProperties;
 import org.bgu.model.GithubBguOAuth2UserInfo;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.MessageSource;
@@ -56,14 +57,14 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public WebClient.Builder applicationWebClientBuilder(ObjectMapper objectMapper) {
+    public WebClient.Builder applicationWebClientBuilder(ObjectMapper objectMapper, WebClientProperties webClientProperties) {
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                     .codecs(codecs -> {
                         codecs.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper));
                         codecs.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(objectMapper));
                     }).build();
         return WebClient.builder()
-                    .baseUrl("https://api.github.com")
+                    .baseUrl(webClientProperties.getUrl())
                     .exchangeStrategies(strategies)
                     .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/vnd.github.v3+json")
                     .defaultHeader(HttpHeaders.USER_AGENT, "The App API");

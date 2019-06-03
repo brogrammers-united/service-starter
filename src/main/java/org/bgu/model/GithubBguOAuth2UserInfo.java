@@ -1,5 +1,6 @@
 package org.bgu.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.bgu.model.oauth.helper.BguOAuth2UserInfoDeserializer;
 import org.springframework.security.core.GrantedAuthority;
