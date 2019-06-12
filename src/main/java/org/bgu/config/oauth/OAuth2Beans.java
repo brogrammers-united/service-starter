@@ -1,17 +1,17 @@
 package org.bgu.config.oauth;
 
-import java.util.Arrays;
-
+import org.bgu.exception.ApplicationExceptionHandler;
 import org.bgu.oauth.service.BguClientDetailsService;
 import org.bgu.oauth.service.BguTokenEnhancer;
-import org.bgu.security.ApplicationExceptionHandler;
-import org.bgu.security.HttpCookieOAuth2AuthorizationRequestRepository;
-import org.bgu.service.KeyStoreService;
-import org.bgu.service.KeyStoreServiceImpl;
+import org.bgu.security.KeyStoreService;
+import org.bgu.security.KeyStoreServiceImpl;
+import org.bgu.security.TokenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
@@ -22,8 +22,10 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import java.util.Arrays;
+
 @Configuration
-@Import({ HttpCookieOAuth2AuthorizationRequestRepository.class, ApplicationExceptionHandler.class, KeyStoreServiceImpl.class })
+@Import({ ApplicationExceptionHandler.class, KeyStoreServiceImpl.class, TokenServiceImpl.class })
 public class OAuth2Beans {
 	
 	public static final String TOKEN_KEY = "Authorization";
@@ -33,11 +35,16 @@ public class OAuth2Beans {
 	private BguClientDetailsService clientDetailsService;
 
 	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder(11);
+	}
+
+	@Bean
 	public JwtTokenStore jwtTokenStore(final KeyStoreService keyStoreService) {
 		return new JwtTokenStore(jwtAccessTokenConverter(keyStoreService));
 	}
 
-	@Bean
+	@Bean("tokenEnhancerChain")
 	public TokenEnhancer tokenEnhancer(final KeyStoreService keyStoreService) {
 		TokenEnhancerChain chain = new TokenEnhancerChain();
 		chain.setTokenEnhancers(Arrays.asList(jwtAccessTokenConverter(keyStoreService), new BguTokenEnhancer()));

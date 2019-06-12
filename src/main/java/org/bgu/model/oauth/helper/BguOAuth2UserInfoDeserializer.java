@@ -1,16 +1,15 @@
 package org.bgu.model.oauth.helper;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bgu.model.GithubBguOAuth2UserInfo;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.bgu.model.GithubBguOAuth2UserInfo;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author William

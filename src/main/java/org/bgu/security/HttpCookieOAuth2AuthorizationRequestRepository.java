@@ -1,13 +1,12 @@
 package org.bgu.security;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author william
@@ -47,6 +46,11 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
 	@Override
 	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
 		return this.loadAuthorizationRequest(request);
+	}
+	
+	public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
+		 CookieUtils.deleteCookie(request, response, OAUTH2_REQUEST_COOKIE_NAME);
+	     CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
 	}
 
 }

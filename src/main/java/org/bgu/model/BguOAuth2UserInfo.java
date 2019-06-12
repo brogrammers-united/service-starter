@@ -1,22 +1,11 @@
 package org.bgu.model;
 
-import java.util.Collection;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-//@JsonTypeInfo(
-//	use = JsonTypeInfo.Id.CLASS,
-//	include = JsonTypeInfo.As.PROPERTY,
-//	property = "class"
-//)
-//@JsonSubTypes({
-//	@JsonSubTypes.Type(value=GithubBguOAuth2UserInfo.class, name="github")
-//})
 public abstract class BguOAuth2UserInfo implements OAuth2User {
 
 	protected final Map<String, Object> attributes;
@@ -42,5 +31,4 @@ public abstract class BguOAuth2UserInfo implements OAuth2User {
 	
 	public abstract boolean isMfaEnabled();
 	
-	public abstract void addAuthorities(Collection<? extends GrantedAuthority> authorities);
 }

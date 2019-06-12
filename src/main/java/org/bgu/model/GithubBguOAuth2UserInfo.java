@@ -1,15 +1,15 @@
 package org.bgu.model;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.bgu.model.oauth.helper.BguOAuth2UserInfoDeserializer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @JsonDeserialize(using=BguOAuth2UserInfoDeserializer.class)
 public class GithubBguOAuth2UserInfo extends BguOAuth2UserInfo {
@@ -51,13 +51,6 @@ public class GithubBguOAuth2UserInfo extends BguOAuth2UserInfo {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Arrays.stream(((String) attributes.get("scope")).split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
-	}
-	
-	@Override
-	public void addAuthorities(Collection<? extends GrantedAuthority> authorities) {
-		StringBuilder scope = new StringBuilder().append((String) attributes.get("scope"));
-		authorities.stream().map(GrantedAuthority::getAuthority).forEach(scope::append);
-		attributes.put("scope", scope.toString());
 	}
 
 	@Override

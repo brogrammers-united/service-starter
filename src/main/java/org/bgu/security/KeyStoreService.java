@@ -1,4 +1,4 @@
-package org.bgu.service;
+package org.bgu.security;
 
 import java.security.KeyPair;
 

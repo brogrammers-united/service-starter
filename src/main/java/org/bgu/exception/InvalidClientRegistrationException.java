@@ -1,20 +1,18 @@
 package org.bgu.exception;
 
-public class InvalidClientRegistrationException extends BguAuthenticationException {
+import org.springframework.http.HttpStatus;
 
-	private static final long serialVersionUID = 1L;
+/**
+ * @author William Gentry
+ */
+public class InvalidClientRegistrationException extends BguException {
 
-	public InvalidClientRegistrationException() {
-		this("Invalid client");
-	}
-	
-	public InvalidClientRegistrationException(String msg, Throwable t) {
-		super(msg, t);
-	}
+    public InvalidClientRegistrationException() {
+        super("Failed to locate requested OAuth2 Client");
+    }
 
-	public InvalidClientRegistrationException(String msg) {
-		super(msg);
-	}
-
-	
+    @Override
+    public HttpStatus getHttpStatus() {
+        return HttpStatus.BAD_REQUEST;
+    }
 }

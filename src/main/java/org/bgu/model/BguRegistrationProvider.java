@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public enum BguRegistrationProvider implements RegistrationProvider {
 	
-	CLI("bgu-cli", "client_credentials"), WEB_APP("bgu-web-app", "authorization_code,password"), GITHUB("github", "authorization_code");
+	CLI("bgu-cli", "client_credentials"), WEB_APP("bgu-web-app", "authorization_code,password"), GITHUB("github-api", "authorization_code");
 	
 	private final String registrationId;
 	private final String grantType;

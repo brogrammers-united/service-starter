@@ -5,14 +5,14 @@ import org.springframework.http.HttpStatus;
 /**
  * @author William Gentry
  */
-public class EmailNotFoundException extends BguException {
+public class InvalidRequestException extends BguException {
 
-    public EmailNotFoundException(String message) {
-        super(message);
+    public InvalidRequestException() {
+        super("Invalid Request");
     }
 
     @Override
     public HttpStatus getHttpStatus() {
-        return HttpStatus.UNAUTHORIZED;
+        return HttpStatus.FORBIDDEN;
     }
 }
